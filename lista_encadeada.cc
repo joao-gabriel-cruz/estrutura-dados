@@ -32,30 +32,34 @@ No *inserir_lista(No *lista, int chave)
 
 No *remover(No *lista, int possicao)
 {
+  No *atual = lista;
+  No *anterior_index = NULL;
+  No *anterior = NULL;
+  int contador = 0;
+
   if (lista == nullptr)
   {
+    cout << "Lista vazia" << endl;
     return NULL;
   };
 
   if (possicao == 0)
   {
     No *novo_no = lista->proximo;
-    free(lista);
-    return novo_no;
-  };
-  No *atual = lista;
-  No *anterior_index = NULL;
-  No *anterior = NULL;
-  int contador = 0;
+    lista->chave = novo_no->chave;
+    lista->proximo = novo_no->proximo;
 
-  for (No *p = atual; p->proximo != NULL; anterior_index = p, p = p->proximo, contador++)
+    return lista;
+  };
+
+  for (No *p = atual; contador <= possicao; contador++, anterior_index = p, p = p->proximo)
   {
     if (possicao == contador)
     {
       atual = p;
       anterior = anterior_index;
       cout << "Item removido: " << p->chave << endl;
-      cout << "Posição: " << contador << endl;
+      cout << "Posicao: " << contador << endl;
     };
   };
   // cout << "Atual: " << atual->chave << endl;
@@ -72,12 +76,51 @@ No *remover(No *lista, int possicao)
   return lista;
 };
 
+No *inserit_por_posicao(No *lista, int possicao, int chave)
+{
+  No *atual = lista;
+  No *anterior_index = NULL;
+  No *anterior = NULL;
+  int contador = 0;
+
+  if (lista == nullptr)
+  {
+    cout << "Lista vazia" << endl;
+    return NULL;
+  };
+
+  if (possicao == 0)
+  {
+    No *novo_no = (No *)malloc(sizeof(No));
+
+    novo_no->chave = chave;
+    novo_no->proximo = lista;
+
+    return lista;
+  };
+
+  for (No *p = atual; contador <= possicao; contador++, anterior_index = p, p = p->proximo)
+  {
+    if (possicao == contador)
+    {
+      atual = p;
+      anterior = anterior_index;
+    };
+  };
+  // cout << "Atual: " << atual->chave << endl;
+
+  No *novo_no = (No *)malloc(sizeof(No));
+  novo_no->chave = chave;
+  novo_no->proximo = atual;
+  anterior->proximo = novo_no;
+  return lista;
+};
+
 void listar(No *lista)
 {
-  for (No *p = lista; p->proximo != NULL; p = p->proximo)
+  for (No *p = lista; p != nullptr; p = p->proximo)
   {
     cout << "No: " << p->chave << endl;
-    cout << "proximo no: " << p->proximo->chave << endl;
   };
 };
 
@@ -95,15 +138,17 @@ int main()
 {
   No *lista = inserir_lista(NULL, 1);
   lista = inserir_lista(lista, 2);
-  // lista = inserir_lista(lista, 3);
-  // lista = inserir_lista(lista, 4);
-  // lista = inserir_lista(lista, 5);
+  lista = inserir_lista(lista, 3);
+  lista = inserir_lista(lista, 4);
+  lista = inserir_lista(lista, 5);
   listar(lista);
-  // cout << "Lista antes de remover" << endl;
-  // remover(lista, 1);
-  // cout << "Lista depois de remover" << endl;
-
-  // listar(lista);
+  cout << "Lista antes de remover" << endl;
+  remover(lista, 0);
+  cout << "Lista depois de remover" << endl;
+  listar(lista);
+  inserit_por_posicao(lista, 2, 90);
+  cout << "Lista depois de adicionar um item" << endl;
+  listar(lista);
 
   // No *resultado = busca_por_chave(lista, 158);
   // cout << resultado->chave;
